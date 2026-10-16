@@ -42,7 +42,7 @@ _cached_model_size: str | None = None
 
 
 def _resolve_model_size(model_size: str | None) -> str:
-    selected = model_size or os.getenv("WHISPER_MODEL") or "small"
+    selected = model_size or os.getenv("WHISPER_MODEL") or "base.en"
     selected = selected.strip()
     if not selected:
         return "small"

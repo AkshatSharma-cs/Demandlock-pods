@@ -1,7 +1,8 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { apiFetch } from "../offline/api";
 import { useT } from "../i18n/useT";
 import { VoiceButton, SpeakButton } from "../voice/VoiceButton";
+import { useDictation } from "../voice/useDictation";
 import type { CurrentUser } from "../types";
 
 type Block = { code: string; name: string; district?: string; state?: string };
@@ -15,14 +16,22 @@ export function DemandPage({ user }: { user?: CurrentUser | null }) {
   const [reference, setReference] = useState<Reference>({ skills: [], records: [] });
   const [form, setForm] = useState({ employer_name: user?.name || "", source_type: "text", transcript_original: "", block_code: "" });
   const [message, setMessage] = useState(""); const [voice, setVoice] = useState<{ blob: Blob; mimeType: string }>();
+  const dictation = useDictation((user?.language as "en" | "hi" | "ta") || "en");
+  const userLanguage = (user?.language as "en" | "hi" | "ta") || "en";
+  const appendedDictationRef = useRef("");
   const load = async () => {
     const response = await apiFetch("/api/v1/demand-tickets");
     if (response.ok) setTickets(await response.json());
   };
   useEffect(() => { void load(); void apiFetch("/api/v1/blocks").then(r => r.ok ? r.json() : []).then(setBlocks); void apiFetch("/api/v1/reference").then(r => r.ok ? r.json() : { skills: [], records: [] }).then(setReference); }, []);
+  useEffect(() => {
+    if (!dictation.finalText || dictation.finalText === appendedDictationRef.current) return;
+    appendedDictationRef.current = dictation.finalText;
+    setForm(current => ({ ...current, transcript_original: `${current.transcript_original}${current.transcript_original ? " " : ""}${dictation.finalText}` }));
+  }, [dictation.finalText]);
   const submit = async (event: FormEvent) => {
     event.preventDefault(); setMessage("");
-    const created = await apiFetch("/api/v1/demand-tickets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, source_type: voice ? "voice" : "text" }) });
+    const created = await apiFetch("/api/v1/demand-tickets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, transcript_language: userLanguage, source_type: voice ? "voice" : "text" }) });
     if (!created.ok) { setMessage("Could not create the demand ticket."); return; }
     const ticket = await created.json();
     const extracted = await apiFetch(`/api/v1/demand-tickets/${ticket.id}/extract`, { method: "POST" });
@@ -41,7 +50,7 @@ export function DemandPage({ user }: { user?: CurrentUser | null }) {
     <div className="metric-grid"><div className="metric-card"><span>Open requests</span><strong>{tickets.filter(ticket => ticket.status !== "confirmed").length}</strong><small>Awaiting review</small></div><div className="metric-card"><span>Reference skills</span><strong>{reference.skills.length}</strong><small>Preloaded locally</small></div><div className="metric-card"><span>Source records</span><strong>{reference.records.length}</strong><small>Ready to cite</small></div></div>
     {user?.role !== "student" && <article className="card"><h3>Capture local demand</h3><form onSubmit={submit}>
       <label>Employer name<input value={form.employer_name} onChange={e => setForm({ ...form, employer_name: e.target.value })} required /></label>
-      <label>Need or voice-note transcript<textarea value={form.transcript_original} onChange={e => setForm({ ...form, transcript_original: e.target.value })} required={!voice} placeholder="I need two mobile repair helpers..." /></label><VoiceButton lang={(user?.language as "en" | "hi" | "ta") || "en"} onRecorded={(blob, mimeType) => setVoice({ blob, mimeType })} /><SpeakButton lang={(user?.language as "en" | "hi" | "ta") || "en"} text="Describe the local work needed, then review the extracted ticket." />
+      <label>Need or voice-note transcript<textarea value={form.transcript_original} onChange={e => setForm({ ...form, transcript_original: e.target.value })} required={!voice} placeholder="I need two mobile repair helpers..." /></label><div className="voice-actions"><VoiceButton lang={userLanguage} onRecorded={(blob, mimeType) => setVoice({ blob, mimeType })} /><div className="dictation-control">{dictation.supported && <button type="button" className={`dictation-button ${dictation.listening ? "listening" : ""}`} onClick={() => dictation.listening ? dictation.stop() : dictation.start()}>{dictation.listening ? "■ Stop dictation" : "✦ Dictate"}</button>}<small>{dictation.supported ? "Browser speech service · needs internet · always edit before confirming" : "Voice dictation unavailable · type instead"}</small>{dictation.error && <span className="unknown">{dictation.error}</span>}</div></div>{(dictation.finalText || dictation.interimText) && <p className="dictation-preview"><b>Dictation:</b> {dictation.finalText} <em>{dictation.interimText}</em></p>}<SpeakButton lang={userLanguage} text="Describe the local work needed, then review the extracted ticket." />
       <label>Block{blocks.length ? <select value={form.block_code} onChange={e => setForm({ ...form, block_code: e.target.value })}><option value="">Choose a block</option>{blocks.map(block => <option key={block.code} value={block.code}>{block.name} ({block.code})</option>)}</select> : <input value={form.block_code} onChange={e => setForm({ ...form, block_code: e.target.value })} placeholder="Enter block code" required />}</label>
       <button className="primary-button">Extract draft</button>
     </form></article>}

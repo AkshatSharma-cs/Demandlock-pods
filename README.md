@@ -77,7 +77,13 @@ Demo mode enables simulated rows, the demo user switcher, and
 | `POD_THRESHOLD` | `5` | Confirmed employment slots needed for a pod |
 | `OLLAMA_BASE_URL` | `http://host.docker.internal:11434` | Ollama API address |
 | `OLLAMA_MODEL` | `qwen2.5:7b-instruct` | Local Ollama model |
-| `WHISPER_MODEL` | `small` | Local faster-whisper model |
+| `WHISPER_MODEL` | `base.en` | Local faster-whisper model |
+
+For the prototype, English voice input is recommended. The **Dictate** button uses
+the browser SpeechRecognition service (Chrome/Edge, internet required) and fills an
+editable transcript. Recorded voice notes use local faster-whisper; set
+`WHISPER_MODEL=base.en` for the faster English-only fallback. Typed input always
+remains available, and extraction still requires explicit review and confirmation.
 
 Compose supplies `DATABASE_URL` as
 `postgresql+psycopg2://demandlock:${POSTGRES_PASSWORD}@db:5432/demandlock`.
