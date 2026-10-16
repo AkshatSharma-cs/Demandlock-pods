@@ -35,6 +35,30 @@ def list_blocks(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
     ]
 
 
+@router.get("/reference")
+def reference_library(db: Session = Depends(get_db)) -> dict[str, Any]:
+    skills = db.scalars(select(SkillFamily).order_by(SkillFamily.canonical_name)).all()
+    records = db.scalars(
+        select(KnowledgeRecord).order_by(KnowledgeRecord.last_checked_at.desc())
+    ).all()
+    return {
+        "skills": [
+            {"slug": skill.slug, "name": skill.canonical_name}
+            for skill in skills
+        ],
+        "records": [
+            {
+                "id": record.id,
+                "title": record.title,
+                "skill_family_ids": record.skill_family_ids,
+                "source_url": record.source_url,
+                "verification_status": record.verification_status,
+            }
+            for record in records
+        ],
+    }
+
+
 def dump(row: Any) -> dict[str, Any]:
     return {column.name: getattr(row, column.name) for column in row.__table__.columns}
 

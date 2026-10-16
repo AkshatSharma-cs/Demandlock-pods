@@ -6,18 +6,20 @@ import type { CurrentUser } from "../types";
 
 type Block = { code: string; name: string; district?: string; state?: string };
 type Ticket = Record<string, any>;
+type Reference = { skills: Array<{ slug: string; name: string }>; records: Array<{ id: string; title: string; source_url: string; verification_status: string }> };
 
 export function DemandPage({ user }: { user?: CurrentUser | null }) {
   const t = useT();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [reference, setReference] = useState<Reference>({ skills: [], records: [] });
   const [form, setForm] = useState({ employer_name: user?.name || "", source_type: "text", transcript_original: "", block_code: "" });
   const [message, setMessage] = useState(""); const [voice, setVoice] = useState<{ blob: Blob; mimeType: string }>();
   const load = async () => {
     const response = await apiFetch("/api/v1/demand-tickets");
     if (response.ok) setTickets(await response.json());
   };
-  useEffect(() => { void load(); void apiFetch("/api/v1/blocks").then(r => r.ok ? r.json() : []).then(setBlocks); }, []);
+  useEffect(() => { void load(); void apiFetch("/api/v1/blocks").then(r => r.ok ? r.json() : []).then(setBlocks); void apiFetch("/api/v1/reference").then(r => r.ok ? r.json() : { skills: [], records: [] }).then(setReference); }, []);
   const submit = async (event: FormEvent) => {
     event.preventDefault(); setMessage("");
     const created = await apiFetch("/api/v1/demand-tickets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, source_type: voice ? "voice" : "text" }) });
@@ -35,7 +37,8 @@ export function DemandPage({ user }: { user?: CurrentUser | null }) {
     setMessage(response.ok ? "Ticket confirmed." : "Confirmation needs a valid skill and block.");
     if (response.ok) await load();
   };
-  return <section><h2>{t("demand")}</h2>
+  return <section><div className="page-intro"><div><p className="eyebrow">Demand intelligence</p><h2>Turn local needs into learning pathways.</h2><p className="muted">Capture a real request, review the AI draft, and keep every decision grounded in local evidence.</p></div><div className="page-mark">01</div></div>
+    <div className="metric-grid"><div className="metric-card"><span>Open requests</span><strong>{tickets.filter(ticket => ticket.status !== "confirmed").length}</strong><small>Awaiting review</small></div><div className="metric-card"><span>Reference skills</span><strong>{reference.skills.length}</strong><small>Preloaded locally</small></div><div className="metric-card"><span>Source records</span><strong>{reference.records.length}</strong><small>Ready to cite</small></div></div>
     {user?.role !== "student" && <article className="card"><h3>Capture local demand</h3><form onSubmit={submit}>
       <label>Employer name<input value={form.employer_name} onChange={e => setForm({ ...form, employer_name: e.target.value })} required /></label>
       <label>Need or voice-note transcript<textarea value={form.transcript_original} onChange={e => setForm({ ...form, transcript_original: e.target.value })} required={!voice} placeholder="I need two mobile repair helpers..." /></label><VoiceButton lang={(user?.language as "en" | "hi" | "ta") || "en"} onRecorded={(blob, mimeType) => setVoice({ blob, mimeType })} /><SpeakButton lang={(user?.language as "en" | "hi" | "ta") || "en"} text="Describe the local work needed, then review the extracted ticket." />
@@ -43,6 +46,7 @@ export function DemandPage({ user }: { user?: CurrentUser | null }) {
       <button className="primary-button">Extract draft</button>
     </form></article>}
     {message && <p className="card" role="status">{message}</p>}
-    <div className="grid">{tickets.map(ticket => <article className="card" key={ticket.id}><h3>{ticket.employer_name}</h3><p>{ticket.status} · {ticket.slots_confirmed ?? 0} slots</p><p>{ticket.transcript_original || "No transcript"}</p>{ticket.status === "needs_confirmation" && user?.role !== "student" && <button className="primary-button" onClick={() => void confirm(ticket)}>Confirm reviewed ticket</button>}</article>)}</div>
+    <div className="section-heading"><div><p className="eyebrow">Your workspace</p><h3>Recent demand requests</h3></div><span className="muted">{tickets.length} total</span></div><div className="grid">{tickets.length ? tickets.map(ticket => <article className="card" key={ticket.id}><div className="card-topline"><span className={`status-pill ${ticket.status}`}>{ticket.status.replace("_", " ")}</span><span className="muted">{ticket.slots_confirmed ?? 0} slots</span></div><h3>{ticket.employer_name}</h3><p>{ticket.transcript_original || "No transcript"}</p>{ticket.status === "needs_confirmation" && user?.role !== "student" && <button className="primary-button" onClick={() => void confirm(ticket)}>Confirm reviewed ticket</button>}</article>) : <article className="card empty-state"><div className="empty-icon">✦</div><h3>Your demand desk is ready</h3><p className="muted">Create your first request above. Your preloaded skill and source library will help the extractor make a stronger draft.</p></article>}</div>
+    <div className="section-heading"><div><p className="eyebrow">Preloaded library</p><h3>Reference skills</h3></div><span className="muted">Source-backed starting points</span></div><div className="reference-grid">{reference.skills.map(skill => <article className="reference-card" key={skill.slug}><span className="reference-icon">↗</span><div><strong>{skill.name}</strong><small>{reference.records.filter(record => record.id.includes(skill.slug) || record.title.toLowerCase().includes(skill.name.toLowerCase().split(" ")[0])).length || "Source"} records available</small></div></article>)}</div>
   </section>;
 }
