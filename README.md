@@ -16,6 +16,12 @@ Live mode is the default Docker configuration. Demo data is explicitly opt-in.
 
 ## Run with Docker (live)
 
+For a presentation/demo, start the stack and open `http://localhost:8080`. The web
+workspace includes the demand desk, learning pods, facilitator review, outcomes,
+impact views, offline status, and preloaded reference data. In live mode, register
+an account first; the local Ollama and ASR features remain available through the
+configured `.env` settings. (live)
+
 Copy `.env.example` to `.env`, set a strong `SECRET_KEY` and
 `POSTGRES_PASSWORD`, then run:
 

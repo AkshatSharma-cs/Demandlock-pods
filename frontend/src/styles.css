@@ -45,6 +45,25 @@ button { cursor: pointer; }
 .metric-card { display: grid; gap: 5px; min-height: 130px; padding: 20px; border: 1px solid #e4ebf2; border-radius: 14px; background: #fff; }
 .metric-card span, .metric-card small { color: #71869b; font-size: .78rem; }
 .metric-card strong { color: #172b4d; font-size: 2rem; letter-spacing: -.05em; }
+.metric-grid.compact { margin: 20px 0 26px; }
+.feature-banner { display: flex; align-items: center; gap: 15px; margin: 24px 0 30px; padding: 18px 20px; border: 1px solid #cfe9e3; border-radius: 15px; background: linear-gradient(105deg, #e9f8f4, #f9fcfb); }
+.feature-banner h3 { margin: 2px 0 0; color: #153e55; }
+.feature-banner p { margin: 2px 0 0; color: #668399; font-size: .82rem; }
+.feature-banner .status-pill { margin-left: auto; }
+.feature-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: #176f72; color: #fff; font-size: 1.25rem; }
+.pod-card .pod-type { margin-top: -10px; color: #a1744d; font-size: .78rem; font-weight: 750; text-transform: capitalize; }
+.progress { height: 6px; margin: 16px 0; overflow: hidden; border-radius: 99px; background: #e8eef2; }
+.progress span { display: block; height: 100%; border-radius: inherit; background: #75c8b7; }
+.author-card { display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; }
+.form-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; }
+.impact-hero { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 18px; background: linear-gradient(110deg, #fff, #edf8f5); }
+.impact-hero h3 { margin: 5px 0; font-size: 1.6rem; }
+.impact-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.impact-grid .outcome-row { justify-content: space-between; padding: 10px 0; border-top: 1px solid #edf1f4; color: #657991; }
+.impact-grid .outcome-row strong { color: #176f72; font-size: 1.2rem; }
+.outcome-intro { display: flex; align-items: center; gap: 16px; background: #fffdf9; }
+.outcome-intro .empty-icon { flex: 0 0 auto; margin: 0; }
+.outcome-intro h3 { margin: 0 0 4px; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin: 36px 0 14px; }
 .section-heading h3 { margin: 3px 0 0; font-size: 1.15rem; letter-spacing: -.02em; }
 .grid, .reference-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 15px; }
@@ -95,6 +114,10 @@ textarea { min-height: 96px; resize: vertical; }
   .topbar .role-badge, .topbar .live-badge { display: none; }
   .metric-grid { grid-template-columns: 1fr; margin-bottom: 28px; }
   .metric-card { min-height: auto; }
+  .feature-banner, .impact-hero { align-items: flex-start; flex-wrap: wrap; }
+  .feature-banner .status-pill { margin-left: 57px; }
+  .author-card { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
   .auth-card { grid-template-columns: 1fr; gap: 26px; margin-top: 11vh; }
   .auth-copy h1 { font-size: 3.4rem; }
 }
