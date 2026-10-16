@@ -1,0 +1,134 @@
+[
+  {
+    "id": "placeholder_mobile_repair_occupation",
+    "record_type": "occupation",
+    "title": "PLACEHOLDER: Mobile repair occupation",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with a description checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "mobile_repair"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "placeholder_mobile_repair_course",
+    "record_type": "course",
+    "title": "PLACEHOLDER: Mobile repair course",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with course details checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "mobile_repair"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "placeholder_tailoring_apprenticeship",
+    "record_type": "apprenticeship",
+    "title": "PLACEHOLDER: Tailoring apprenticeship",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with apprenticeship details checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "tailoring"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "placeholder_solar_maintenance_scheme",
+    "record_type": "scheme",
+    "title": "PLACEHOLDER: Solar maintenance scheme",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with scheme details checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "solar_maintenance"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "placeholder_food_service_occupation",
+    "record_type": "occupation",
+    "title": "PLACEHOLDER: Food service occupation",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with occupation details checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "food_service"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "placeholder_digital_services_examination",
+    "record_type": "examination",
+    "title": "PLACEHOLDER: Digital services examination",
+    "authority": "PLACEHOLDER: official authority to be supplied",
+    "description": "PLACEHOLDER: Replace with examination details checked against a real official source.",
+    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
+    "last_checked_at": "2026-10-15",
+    "skill_family_ids": [
+      "digital_services"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta",
+      "te"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  }
+]
