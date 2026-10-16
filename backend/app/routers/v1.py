@@ -234,9 +234,14 @@ def get_ticket(ticket_id: str, actor: User = Depends(get_actor), db: Session = D
 def confirm_ticket(ticket_id: str, payload: TicketConfirm, actor: User = Depends(require_role("employer", "facilitator")), db: Session = Depends(get_db)):
     row = _ticket(db, ticket_id)
     if row.status == "confirmed": fail(409, "Ticket is already confirmed")
-    if not db.get(SkillFamily, payload.confirmed_skill_id): fail(422, "Unknown skill family")
+    skill = db.get(SkillFamily, payload.confirmed_skill_id)
+    if skill is None:
+        skill = db.scalar(select(SkillFamily).where(SkillFamily.slug == payload.confirmed_skill_id))
+    if skill is None: fail(422, "Unknown skill family")
     if payload.demand_type not in {"employment", "training", "service_contract"}: fail(422, "Invalid demand_type")
-    for key, value in payload.model_dump().items(): setattr(row, key, value)
+    values = payload.model_dump()
+    values["confirmed_skill_id"] = skill.id
+    for key, value in values.items(): setattr(row, key, value)
     row.status, row.confirmed_by, row.confirmed_at, row.version = "confirmed", actor.id, datetime.now(timezone.utc), row.version + 1
     db.commit(); db.refresh(row)
     return dump(row)

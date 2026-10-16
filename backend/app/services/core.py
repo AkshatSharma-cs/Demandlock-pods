@@ -74,6 +74,8 @@ def extract_ticket(db: Session, row: DemandTicket) -> DemandTicket:
     row.missing_fields = proposed.get("missing_fields")
     row.demand_type = proposed.get("demand_type") or "unknown"
     row.extraction_method = "rules"
+    row.status = "needs_confirmation"
+    row.version += 1
     db.commit()
     db.refresh(row)
     return row

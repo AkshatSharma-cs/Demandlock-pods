@@ -88,6 +88,11 @@ button { cursor: pointer; }
 .dictation-control small { max-width: 300px; color: #71869b; font-size: .72rem; }
 .dictation-preview { margin: 12px 0 0; padding: 10px 12px; border-left: 3px solid #80d1c5; background: #f0faf8; color: #4e687c; font-size: .82rem; }
 .dictation-preview em { color: #176f72; }
+.draft-card { margin-top: 20px; border-color: #cfe9e3; background: linear-gradient(110deg, #fff, #f2fbf9); }
+.draft-fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+.draft-fields div { display: grid; gap: 4px; padding: 13px; border-radius: 10px; background: #fff; border: 1px solid #e0eee9; }
+.draft-fields small { color: #71869b; font-size: .72rem; }
+.draft-fields strong { color: #173b52; }
 .muted { color: #71869b; }
 .tabs { display: none; }
 label { display: grid; gap: 7px; margin-top: 15px; color: #455d76; font-size: .82rem; font-weight: 750; }
@@ -126,6 +131,7 @@ textarea { min-height: 96px; resize: vertical; }
   .feature-banner .status-pill { margin-left: 57px; }
   .author-card { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  .draft-fields { grid-template-columns: repeat(2, 1fr); }
   .auth-card { grid-template-columns: 1fr; gap: 26px; margin-top: 11vh; }
   .auth-copy h1 { font-size: 3.4rem; }
 }
