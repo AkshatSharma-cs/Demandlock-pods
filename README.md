@@ -40,6 +40,21 @@ Admin accounts cannot be self-registered. **Untested:** the first-admin provisio
 procedure for a production PostgreSQL deployment; provision the first admin through
 the protected deployment/database process.
 
+### Presentation accounts
+
+The following local accounts were created and login-tested for the prototype
+demonstration:
+
+| Role | Phone | PIN |
+| --- | --- | --- |
+| Employer | `9000000001` | `4826` |
+| Student | `9000000002` | `5937` |
+| Facilitator | `9000000003` | `7164` |
+
+The facilitator account is verified and can demonstrate cohort review, task review,
+module creation, and publishing. These are prototype-only credentials; change or
+remove them before any shared, staging, or production deployment.
+
 ## Run demo
 
 ```bash
