@@ -227,6 +227,8 @@ class SyncResponse(APIModel):
 
 class HealthResponse(APIModel):
     status: str = "ok"
+    db: str = "ok"
+    demo_mode: bool = False
 
 
 class Actor(APIModel):

@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .db import create_all
+from .db import SessionLocal
+from sqlalchemy import text
 from . import models  # noqa: F401
 from .schemas import HealthResponse
 from .routers.v1 import router as v1_router
@@ -38,7 +40,9 @@ app.add_middleware(
 
 @app.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    return HealthResponse()
+    with SessionLocal() as db:
+        db.execute(text("SELECT 1"))
+    return HealthResponse(demo_mode=settings.demo_mode)
 
 
 app.include_router(demo_router, prefix="/api/v1")

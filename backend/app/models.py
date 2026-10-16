@@ -33,9 +33,11 @@ class User(CommonModel):
 
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     role: Mapped[str] = mapped_column(String(50), nullable=False)
-    phone: Mapped[str | None] = mapped_column(String(50))
+    phone: Mapped[str | None] = mapped_column(String(50), unique=True)
+    pin_hash: Mapped[str | None] = mapped_column(String(300))
     language: Mapped[str | None] = mapped_column(String(20))
     age_band: Mapped[str | None] = mapped_column(String(30))
+    facilitator_verified: Mapped[bool] = mapped_column(default=False, nullable=False)
     interests: Mapped[list[str] | None] = mapped_column(JSON)
 
 
@@ -157,6 +159,15 @@ class KnowledgeRecord(CommonModel):
     benefits_json: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     verification_status: Mapped[str] = mapped_column(String(50), nullable=False)
     valid_until: Mapped[date | None] = mapped_column(Date)
+
+
+class Block(CommonModel):
+    __tablename__ = "blocks"
+
+    code: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    district: Mapped[str | None] = mapped_column(String(200))
+    state: Mapped[str | None] = mapped_column(String(200))
 
 
 class SyncReceipt(CommonModel):
