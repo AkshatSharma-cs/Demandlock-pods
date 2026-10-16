@@ -1,4 +1,5 @@
 import base64
+import binascii
 import hashlib
 import hmac
 import json
@@ -33,7 +34,7 @@ def get_actor(
             if int(payload["exp"]) <= int(time.time()):
                 raise ValueError
             user_id = str(payload["uid"])
-        except (ValueError, KeyError, TypeError, json.JSONDecodeError):
+        except (ValueError, KeyError, TypeError, binascii.Error, UnicodeDecodeError, json.JSONDecodeError):
             raise HTTPException(status_code=401, detail="Invalid or expired token") from None
     elif x_demo_user_id and settings.demo_mode:
         user_id = x_demo_user_id
