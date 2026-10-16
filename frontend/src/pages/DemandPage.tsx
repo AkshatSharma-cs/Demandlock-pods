@@ -17,8 +17,8 @@ export function DemandPage({ user }: { user?: CurrentUser | null }) {
   const [draft, setDraft] = useState<Ticket | null>(null);
   const [form, setForm] = useState({ employer_name: user?.name || "", source_type: "text", transcript_original: "", block_code: "" });
   const [message, setMessage] = useState(""); const [voice, setVoice] = useState<{ blob: Blob; mimeType: string }>();
-  const dictation = useDictation((user?.language as "en" | "hi" | "ta") || "en");
-  const userLanguage = (user?.language as "en" | "hi" | "ta") || "en";
+  const userLanguage = (localStorage.getItem("lang") || user?.language || "en") as "en" | "hi" | "ta";
+  const dictation = useDictation(userLanguage);
   const appendedDictationRef = useRef("");
   const load = async () => {
     const response = await apiFetch("/api/v1/demand-tickets");

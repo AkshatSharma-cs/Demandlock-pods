@@ -18,7 +18,7 @@ Live mode is the default Docker configuration. Demo data is explicitly opt-in.
 
 For a presentation/demo, start the stack and open `http://localhost:8080`. The web
 workspace includes the demand desk, learning pods, facilitator review, outcomes,
-impact views, offline status, and preloaded reference data. In live mode, register
+impact views, offline status, multilingual UI, and preloaded reference data. In live mode, register
 an account first; the local Ollama and ASR features remain available through the
 configured `.env` settings. (live)
 
@@ -81,9 +81,12 @@ Demo mode enables simulated rows, the demo user switcher, and
 
 For the prototype, English voice input is recommended. The **Dictate** button uses
 the browser SpeechRecognition service (Chrome/Edge, internet required) and fills an
-editable transcript. Recorded voice notes use local faster-whisper; set
-`WHISPER_MODEL=base.en` for the faster English-only fallback. Typed input always
-remains available, and extraction still requires explicit review and confirmation.
+editable transcript. The interface can be switched between English, Hindi, and
+Tamil; the selected language also controls browser dictation where supported.
+Recorded voice notes use local faster-whisper; set `WHISPER_MODEL=base.en` for
+the faster English-only fallback. Typed input always remains available, and
+extraction still requires explicit review and confirmation. Hindi/Tamil speech
+accuracy remains subject to further evaluation.
 
 Compose supplies `DATABASE_URL` as
 `postgresql+psycopg2://demandlock:${POSTGRES_PASSWORD}@db:5432/demandlock`.
@@ -122,19 +125,26 @@ Phones need HTTPS for microphone access; try
 
 ## Verification status
 
-Tested: backend `pytest -q` (128 passed), frontend `npm test` (6 passed),
+Tested: backend `pytest -q` (128 passed), frontend `npm test` (9 passed),
 frontend `npm run build`, `docker compose config`, Docker image build/start,
-live health checks, and live HTTP registration/login.
+live health checks, live HTTP registration/login, and live smoke checks for the
+facilitator cohort and outcomes workflows.
 
-**Untested:** full browser automation, testing on a real low-end Android device,
-and real employer confirmation.
+**Untested:** full browser automation beyond the documented live smoke checks,
+testing on a real low-end Android device, and real employer confirmation.
 
 ## Blueprint scope
 
 The current branch implements the blueprint's backend and browser workflows:
 source-backed reference records, employer demand capture and human confirmation,
 deterministic pods, safeguarding, facilitator review, module authoring, student
-submissions, outcome reporting, offline sync, and voice input/output fallbacks.
+submissions, age-aware review permissions, pod-mode evaluation, published-module
+attachment, verification-aware outcome recording, multilingual UI localization,
+offline sync, and voice input/output fallbacks. Facilitators can evaluate
+`supervised_practice` or `work_trial` pods and attach published modules. Adult
+submissions can be reviewed by an employer or facilitator; minor submissions
+are facilitator-only. Students record only `self_reported` outcomes, while
+facilitators and employers record their respective confirmed verification levels.
 
 The following blueprint items remain intentionally excluded at the request for this
 implementation: a separate demo-mode redesign, testing on a real low-end Android

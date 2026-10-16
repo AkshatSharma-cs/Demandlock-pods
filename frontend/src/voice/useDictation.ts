@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Lang } from "./voiceKeys";
 
 type SpeechResult = { isFinal: boolean; 0: { transcript: string } };
-type RecognitionEvent = Event & { results: { length: number; [index: number]: SpeechResult } };
+type RecognitionEvent = Event & { resultIndex?: number; results: { length: number; [index: number]: SpeechResult } };
 type RecognitionErrorEvent = Event & { error: string };
 interface SpeechRecognitionInstance {
   continuous: boolean;
@@ -29,6 +29,7 @@ const errorMessages: Record<string, string> = {
 
 export function useDictation(lang: Lang) {
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const finalTranscriptRef = useRef("");
   const [listening, setListening] = useState(false);
   const [interimText, setInterimText] = useState("");
   const [finalText, setFinalText] = useState("");
@@ -45,6 +46,7 @@ export function useDictation(lang: Lang) {
     setError(null);
     setInterimText("");
     setFinalText("");
+    finalTranscriptRef.current = "";
     const recognition = new Constructor();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -52,12 +54,16 @@ export function useDictation(lang: Lang) {
     recognition.onresult = event => {
       let interim = "";
       let final = "";
-      for (let index = event.results.length - 1; index >= 0; index -= 1) {
+      const startIndex = event.resultIndex ?? 0;
+      for (let index = event.results.length - 1; index >= startIndex; index -= 1) {
         const result = event.results[index];
         if (result.isFinal) final = `${result[0].transcript} ${final}`;
         else interim = `${result[0].transcript} ${interim}`;
       }
-      setFinalText(final.trim());
+      if (final.trim()) {
+        finalTranscriptRef.current = `${finalTranscriptRef.current} ${final.trim()}`.trim();
+      }
+      setFinalText(finalTranscriptRef.current);
       setInterimText(interim.trim());
     };
     recognition.onerror = event => {
