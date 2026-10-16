@@ -7,3 +7,4 @@ pytest
 httpx
 psycopg2-binary
 faster-whisper
+av<19
