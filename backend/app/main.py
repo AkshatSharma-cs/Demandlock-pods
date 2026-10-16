@@ -15,6 +15,7 @@ from .routers.submissions import router as submissions_router
 from .routers.outcomes import router as outcomes_router
 from .routers.dashboard import router as dashboard_router
 from .routers.sync import router as sync_router
+from .routers.demo import router as demo_router
 
 api_router = APIRouter(prefix="/api/v1")
 
@@ -40,6 +41,7 @@ def health() -> HealthResponse:
     return HealthResponse()
 
 
+app.include_router(demo_router, prefix="/api/v1")
 app.include_router(tickets_router, prefix="/api/v1")
 app.include_router(pods_router, prefix="/api/v1")
 app.include_router(modules_router, prefix="/api/v1")

@@ -24,6 +24,8 @@ class ModuleCreate(BaseModel):
     language: str = "en"
     skill_family_id: str
     content_json: dict[str, Any] | None = None
+    pricing_model: str = "free"
+    price_minor: int | None = None
 
 
 class PublishRequest(BaseModel):
@@ -36,6 +38,8 @@ def create_module(
     actor: User = Depends(require_role("facilitator")),
     db: Session = Depends(get_db),
 ) -> dict:
+    if payload.pricing_model not in {"free", "pay_per_module", "subscription"}:
+        raise HTTPException(422, "Invalid pricing_model")
     try:
         return dump(core.create_module(db, **payload.model_dump(), actor=actor))
     except ValueError as exc:

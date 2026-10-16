@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..config import settings
-from ..models import DemandTicket, Pod
+from ..models import DemandTicket, Pod, SkillFamily
 
 
 def count_eligible_tickets(
@@ -62,8 +62,9 @@ def evaluate(
             )
         )
         if pod is None:
+            family = db.get(SkillFamily, skill_family_id)
             pod = Pod(
-                name=f"{skill_family_id} pod",
+                name=f"{family.canonical_name if family else skill_family_id} pod",
                 skill_family_id=skill_family_id,
                 block_code=block_code,
                 threshold_slots=settings.pod_threshold,

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..deps import get_actor, require_role
-from ..models import DemandTicket, KnowledgeRecord, Pod, PodEnrolment, SkillFamily, Student, User
+from ..models import DemandTicket, KnowledgeRecord, Module, Pod, PodEnrolment, SkillFamily, Student, TaskSubmission, User
 from ..services import pods_rule, retrieval, safeguarding
 
 router = APIRouter()
@@ -93,6 +93,50 @@ def list_pods(
 @router.get("/pods/{pod_id}")
 def get_pod(pod_id: str, actor: User = Depends(get_actor), db: Session = Depends(get_db)) -> dict:
     return pod_details(db, pod_or_404(db, pod_id))
+
+
+@router.get("/pods/{pod_id}/submissions")
+def pod_submissions(
+    pod_id: str,
+    actor: User = Depends(require_role("facilitator")),
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    pod_or_404(db, pod_id)
+    students = {student.id: db.get(User, student.user_id) for student in db.scalars(select(Student)).all()}
+    rows = db.scalars(select(TaskSubmission).where(TaskSubmission.pod_id == pod_id)).all()
+    return [
+        {
+            "student_name": students[row.student_id].name if students.get(row.student_id) else "unknown",
+            "age_band": (students[row.student_id].age_band if students.get(row.student_id) else None) or "unknown",
+            "task_id": row.task_id,
+            "submission_json": row.submission_json,
+            "status": row.status,
+            "id": row.id,
+        }
+        for row in rows
+    ]
+
+
+class ModuleLink(BaseModel):
+    module_id: str
+
+
+@router.post("/pods/{pod_id}/module")
+def attach_module(
+    pod_id: str,
+    payload: ModuleLink,
+    actor: User = Depends(require_role("facilitator")),
+    db: Session = Depends(get_db),
+) -> dict:
+    pod = pod_or_404(db, pod_id)
+    module = db.get(Module, payload.module_id)
+    if module is None:
+        raise HTTPException(404, "Module not found")
+    pod.module_id = module.id
+    pod.version += 1
+    db.commit()
+    db.refresh(pod)
+    return dump(pod)
 
 
 @router.post("/pods/{pod_id}/enrolments")

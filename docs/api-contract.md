@@ -17,8 +17,21 @@ The current seeded user IDs are:
 | Ravi | `04efe61d-9349-45b8-b544-fe598c6b6fd2` |
 | Kavya | `ada748a0-864f-4775-93d9-7ac1512f27be` |
 
+Student IDs printed by the seed script:
+
+| Student | ID |
+|---|---|
+| Ravi | `3a3b8e6f-9758-4508-bf52-ff54d6de0d6e` |
+| Kavya | `802a7b71-bb56-43ab-9e68-cf15e15d5fea` |
+
 IDs are deterministic for an existing database and are printed again by every
 seed run. If the database is recreated, use the newly printed values.
+
+The frontend can discover the current IDs and roles with:
+
+```bash
+curl http://127.0.0.1:8000/api/v1/demo/users
+```
 
 ## Demo flow
 

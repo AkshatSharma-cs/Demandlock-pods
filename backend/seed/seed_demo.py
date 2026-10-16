@@ -15,6 +15,7 @@ from app.db import SessionLocal, create_all  # noqa: E402
 from app.models import (  # noqa: E402
     DemandTicket,
     KnowledgeRecord,
+    Module,
     Pod,
     SkillFamily,
     Student,
@@ -109,6 +110,32 @@ def seed() -> None:
                 "facilitator_user_id": facilitator.id,
             },
         )
+        mobile_module = get_or_create(
+            db,
+            Module,
+            title="Mobile repair essentials",
+            skill_family_id=families["mobile_repair"].id,
+            defaults={
+                "content_json": {
+                    "language": "en",
+                    "lessons": [
+                        "Identify common phone components",
+                        "Practise safe inspection and repair steps",
+                    ],
+                    "pricing": {"pricing_model": "free", "price_minor": None},
+                },
+                "status": "published",
+            },
+        )
+        mobile_module.status = "published"
+        for pod in db.scalars(
+            select(Pod).where(
+                Pod.block_code == "demo-block-01",
+                Pod.skill_family_id == families["mobile_repair"].id,
+                Pod.pod_mode.in_(("supervised_practice", "work_trial")),
+            )
+        ).all():
+            pod.module_id = mobile_module.id
 
         records = json.loads((BACKEND_ROOT / "seed" / "knowledge_records.json").read_text(encoding="utf-8"))
         for item in records:
@@ -120,6 +147,9 @@ def seed() -> None:
         print("Seeded users:")
         for user in (facilitator, *employers, ravi, kavya):
             print(f"{user.name}: {user.id}")
+        print("Seeded students:")
+        for student in db.scalars(select(Student).order_by(Student.created_at)).all():
+            print(f"{student.user_id}: {student.id}")
 
 
 if __name__ == "__main__":

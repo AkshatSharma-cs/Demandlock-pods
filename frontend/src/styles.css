@@ -10,3 +10,12 @@ h1 { font-size: clamp(2rem, 7vw, 4rem); line-height: 1.05; margin: 8px 0 16px; }
 .sync-status button { min-height: 48px; border: 0; border-radius: 10px; padding: 0 18px; color: white; background: #14284b; font-weight: 700; cursor: pointer; }
 .sync-status button:disabled { opacity: .55; cursor: wait; }
 .muted { color: #65738a; }
+.toolbar, .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; align-items: center; }
+select, .tabs button { min-height: 44px; border: 1px solid #cbd7e8; border-radius: 9px; padding: 0 12px; background: white; color: #14284b; }
+.tabs button.active { background: #14284b; color: white; }
+.badge { background: #e6eefb; border-radius: 999px; padding: 7px 12px; font-size: .85rem; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px; }
+.grid .card { margin-top: 12px; }
+.card button { min-height: 44px; border: 0; border-radius: 9px; background: #14284b; color: white; padding: 0 15px; font-weight: 700; }
+.card button:disabled { background: #a7b2c3; }
+.unknown { color: #986d00; font-weight: 700; }

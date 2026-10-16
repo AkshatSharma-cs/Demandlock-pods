@@ -112,6 +112,8 @@ def create_module(
     language: str,
     content_json: dict[str, Any] | None,
     actor: User,
+    pricing_model: str = "free",
+    price_minor: int | None = None,
 ) -> Module:
     family = require_skill_family(db, skill_family_id)
     if content_json is None:
@@ -134,6 +136,11 @@ def create_module(
             language,
             knowledge_dicts,
         )
+    content_json = dict(content_json or {})
+    content_json["pricing"] = {
+        "pricing_model": pricing_model,
+        "price_minor": price_minor,
+    }
     row = Module(
         title=title,
         skill_family_id=family.id,
