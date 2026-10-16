@@ -1,11 +1,21 @@
 import { enqueue } from "./outbox";
-const actorHeader = () => { const id = localStorage.getItem("demo_user_id"); return id ? { "X-Demo-User-Id": id } : {}; };
+const actorHeader = () => {
+  const headers: Record<string, string> = {};
+  const token = localStorage.getItem("auth_token");
+  const demoMode = localStorage.getItem("demo_mode") === "true";
+  const id = localStorage.getItem("demo_user_id");
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (demoMode && id) headers["X-Demo-User-Id"] = id;
+  return headers;
+};
 export async function apiFetch(input: RequestInfo | URL, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
   Object.entries(actorHeader()).forEach(([key, value]) => headers.set(key, value));
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 10000);
-  try { return await fetch(input, { ...init, headers, signal: init.signal ?? controller.signal }); }
+  try {   const response = await fetch(input, { ...init, headers, signal: init.signal ?? controller.signal });
+  if (response.status === 401) window.dispatchEvent(new Event("auth-expired"));
+  return response; }
   finally { window.clearTimeout(timer); }
 }
 export async function queueOrSend(action: string, entity_type: string, entity_id: string, payload: Record<string, unknown>, base_version?: number) {

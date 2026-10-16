@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from ..config import settings
 from ..deps import get_actor, require_role, require_verified_facilitator
 from ..models import (
-    DemandTicket, KnowledgeRecord, Module, OutcomeEvent, Pod, PodEnrolment,
+    Block, DemandTicket, KnowledgeRecord, Module, OutcomeEvent, Pod, PodEnrolment,
     SkillFamily, Student, TaskSubmission, User,
 )
 from ..services import asr, extractor, llm, module_draft, retrieval, safeguarding
@@ -25,6 +25,14 @@ router = APIRouter()
 
 def fail(code: int, message: str) -> None:
     raise HTTPException(code, detail=message)
+
+
+@router.get("/blocks")
+def list_blocks(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
+    return [
+        {"code": block.code, "name": block.name, "district": block.district, "state": block.state}
+        for block in db.scalars(select(Block).order_by(Block.name)).all()
+    ]
 
 
 def dump(row: Any) -> dict[str, Any]:

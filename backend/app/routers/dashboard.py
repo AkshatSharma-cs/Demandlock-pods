@@ -9,7 +9,10 @@ from sqlalchemy.orm import Session
 from ..config import settings
 from ..db import get_db
 from ..deps import get_actor
-from ..models import DemandTicket, OutcomeEvent, Pod, User
+from ..models import (
+    Block, DemandTicket, KnowledgeRecord, Module, OutcomeEvent, Pod, PodEnrolment,
+    SkillFamily, Student, SyncReceipt, TaskSubmission, User,
+)
 
 router = APIRouter()
 
@@ -29,8 +32,16 @@ def impact(actor: User = Depends(get_actor), db: Session = Depends(get_db)) -> d
         level = (outcome.payload or {}).get("verification_level", "unknown")
         stages.setdefault(outcome.event_type, {})
         stages[outcome.event_type][level] = stages[outcome.event_type].get(level, 0) + 1
+    models = (
+        Block, DemandTicket, KnowledgeRecord, Module, OutcomeEvent, Pod, PodEnrolment,
+        SkillFamily, Student, SyncReceipt, TaskSubmission, User,
+    )
+    has_simulated_data = any(
+        db.scalar(select(model.id).where(model.data_mode == "SIMULATED").limit(1)) is not None
+        for model in models
+    )
     return {
-        "data_mode": "SIMULATED" if db.scalar(select(OutcomeEvent).where(OutcomeEvent.data_mode == "SIMULATED")) or db.scalar(select(Pod).where(Pod.data_mode == "SIMULATED")) or db.scalar(select(DemandTicket).where(DemandTicket.data_mode == "SIMULATED")) else "LIVE",
+        "data_mode": "SIMULATED" if has_simulated_data else "LIVE",
         "outcomes": stages,
         "counts_by_stage_and_verification_level": stages,
         "tickets_by_status": grouped(db.scalars(select(DemandTicket)).all(), "status"),
