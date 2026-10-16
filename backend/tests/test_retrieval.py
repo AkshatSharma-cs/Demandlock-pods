@@ -380,11 +380,11 @@ def test_invalid_today_raises_clear_error():
         retrieve([], "mobile_repair", today="tomorrow")
 
 
-def test_seed_file_has_six_unverified_placeholders():
+def test_seed_file_has_source_backed_unverified_records():
     seed_path = BACKEND_ROOT / "seed" / "knowledge_records.json"
     records = json.loads(seed_path.read_text(encoding="utf-8"))
 
-    assert len(records) == 6
+    assert len(records) >= 10
 
     expected_families = {
         "mobile_repair",
@@ -403,8 +403,8 @@ def test_seed_file_has_six_unverified_placeholders():
     assert expected_families <= observed_families
 
     for item in records:
-        assert item["title"].startswith("PLACEHOLDER:")
-        assert item["source_url"] == "https://REPLACE-WITH-REAL-SOURCE"
+        assert item["source_url"].startswith("https://")
+        assert "REPLACE-WITH-REAL-SOURCE" not in item["source_url"]
         assert item["verification_status"] == "unverified"
-        assert item["last_checked_at"] == "2026-10-15"
+        assert item["last_checked_at"] == "2026-10-16"
         assert item["valid_until"] is None

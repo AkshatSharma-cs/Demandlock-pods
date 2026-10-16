@@ -53,7 +53,7 @@ def verify_pin(pin: str, encoded: str | None) -> bool:
         return False
 
 
-def user_payload(user: User) -> dict:
+def user_payload(user: User, student_id: str | None = None) -> dict:
     return {
         "id": user.id,
         "name": user.name,
@@ -62,6 +62,7 @@ def user_payload(user: User) -> dict:
         "age_band": user.age_band,
         "language": user.language,
         "facilitator_verified": user.facilitator_verified,
+        "student_id": student_id,
     }
 
 
@@ -94,16 +95,18 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> dict:
         data_mode="LIVE",
     )
     db.add(user)
+    student = None
     try:
         db.flush()
         if payload.role == "student":
-            db.add(Student(user_id=user.id, age_band=payload.age_band, data_mode="LIVE"))
+            student = Student(user_id=user.id, age_band=payload.age_band, data_mode="LIVE")
+            db.add(student)
         db.commit()
     except IntegrityError:
         db.rollback()
         raise HTTPException(409, "Phone number is already registered") from None
     db.refresh(user)
-    return {"user": user_payload(user)}
+    return {"user": user_payload(user, student.id if student else None)}
 
 
 @router.post("/auth/login")
@@ -117,4 +120,5 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> dict:
         failed_attempts[payload.phone].append(now)
         raise HTTPException(401, "Invalid phone or PIN")
     failed_attempts.pop(payload.phone, None)
-    return {"token": issue_token(user), "user": user_payload(user)}
+    student = db.scalar(select(Student).where(Student.user_id == user.id))
+    return {"token": issue_token(user), "user": user_payload(user, student.id if student else None)}

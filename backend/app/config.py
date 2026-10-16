@@ -14,7 +14,7 @@ class Settings(BaseModel):
     cors_origins: str = os.getenv("CORS_ORIGINS", "*")
 
     def model_post_init(self, __context: object) -> None:
-        if not self.demo_mode and not self.secret_key and not self.database_url.startswith("sqlite"):
+        if not self.demo_mode and not self.secret_key:
             raise ValueError("SECRET_KEY is required when DEMO_MODE=false")
 
     @property

@@ -17,6 +17,7 @@ export function AuthScreen({ onLogin }: { onLogin: (user: AuthUser) => void }) {
     if (!response.ok) { setError(body.detail || "Authentication failed"); return; }
     if (registering) { setRegistering(false); setError("Registration complete. Sign in below."); return; }
     localStorage.setItem("auth_token", body.token);
+    localStorage.setItem("current_user", JSON.stringify(body.user));
     onLogin(body.user);
   };
   return <section className="card auth-card">

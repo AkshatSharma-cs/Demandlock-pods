@@ -229,3 +229,29 @@ def test_module_publish_requires_human_review(api):
         json={"human_reviewed": False},
     )
     assert response.status_code == 422
+
+
+def test_live_auth_register_login_and_demo_header_rejection(api, monkeypatch):
+    client, _, _ = api
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "demo_mode", False)
+    monkeypatch.setattr(settings, "secret_key", "test-secret")
+    payload = {
+        "name": "Live Student",
+        "phone": "9999999999",
+        "pin": "1234",
+        "role": "student",
+        "age_band": "18_plus",
+        "language": "en",
+    }
+    registered = client.post("/api/v1/auth/register", json=payload)
+    assert registered.status_code == 201
+    assert registered.json()["user"]["student_id"]
+    assert client.post("/api/v1/auth/register", json=payload).status_code == 409
+    login = client.post("/api/v1/auth/login", json={"phone": payload["phone"], "pin": payload["pin"]})
+    assert login.status_code == 200
+    token = login.json()["token"]
+    assert client.get("/api/v1/me", headers={"Authorization": f"Bearer {token}"}).status_code == 200
+    assert client.get("/api/v1/me", headers={"Authorization": "Bearer invalid"}).status_code == 401
+    assert client.get("/api/v1/me", headers={"X-Demo-User-Id": registered.json()["user"]["id"]}).status_code == 401

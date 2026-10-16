@@ -20,19 +20,25 @@ export default function App() {
   const [users, setUsers] = useState<Array<{id: string; name: string; role: string}>>([]);
   const [demoMode, setDemoMode] = useState(localStorage.getItem("demo_mode") === "true");
   const [actor, setActor] = useState(localStorage.getItem("demo_user_id") || "");
-  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ id: string; name: string; role: string; student_id?: string } | null>(() => {
+    try { return JSON.parse(localStorage.getItem("current_user") || "null"); } catch { return null; }
+  });
   useEffect(() => {
     void fetch("/health").then(response => response.json()).then(health => {
       setDemoMode(Boolean(health.demo_mode)); localStorage.setItem("demo_mode", String(Boolean(health.demo_mode)));
       if (health.demo_mode) void apiFetch("/api/v1/demo/users").then(r => r.ok ? r.json() : []).then(setUsers);
     });
-    const expired = () => { localStorage.removeItem("auth_token"); setUser(null); };
+    const token = localStorage.getItem("auth_token");
+    if (token) void apiFetch("/api/v1/me").then(response => response.ok ? response.json() : Promise.reject()).then(body => {
+      const current = body.user; localStorage.setItem("current_user", JSON.stringify(current)); setUser(current);
+    }).catch(() => { localStorage.removeItem("auth_token"); localStorage.removeItem("current_user"); setUser(null); });
+    const expired = () => { localStorage.removeItem("auth_token"); localStorage.removeItem("current_user"); setUser(null); };
     window.addEventListener("auth-expired", expired);
     return () => window.removeEventListener("auth-expired", expired);
   }, []);
   useEffect(() => { if (!demoMode && !localStorage.getItem("auth_token")) setUser(null); }, [demoMode]);
   const selected = users.find(user => user.id === actor);
-  if (!demoMode && !user && !localStorage.getItem("auth_token")) return <main className="app-shell"><p className="eyebrow">{t("appName")}</p><AuthScreen onLogin={setUser} /></main>;
+  if (!demoMode && !user) return <main className="app-shell"><p className="eyebrow">{t("appName")}</p><AuthScreen onLogin={setUser} /></main>;
   const Page = tab === "pods" ? PodsPage : tab === "cohort" ? CohortPage : tab === "outcomes" ? OutcomesPage : tab === "impact" ? ImpactPage : DemandPage;
   return <main className="app-shell">
     <header><p className="eyebrow">{t("appName")}</p><h1>Learn safely. Build evidence. Keep control offline.</h1><p className="intro">A teacher-run workspace for local demand and supervised practice.</p>
@@ -41,6 +47,6 @@ export default function App() {
     {!online && <OfflineBanner />}
     <SyncStatus pendingCount={sync.pendingCount} needsReviewCount={sync.needsReviewCount} syncing={sync.syncing} onSync={sync.syncNow} />
     <nav className="tabs">{(["demand", "pods", "cohort", "outcomes", "impact"] as const).map(name => <button className={tab === name ? "active" : ""} onClick={() => setTab(name)} key={name}>{t(name)}</button>)}</nav>
-    <Page />
+    <Page user={demoMode ? selected : user} />
   </main>;
 }

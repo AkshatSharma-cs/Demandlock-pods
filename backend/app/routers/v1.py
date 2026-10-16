@@ -138,8 +138,11 @@ def _ticket(db: Session, ticket_id: str) -> DemandTicket:
 
 
 @router.get("/me")
-def me(actor: User = Depends(get_actor)) -> dict[str, Any]:
-    return {"user": dump(actor), "auth_mode": "DEMO" if settings.demo_mode else "LIVE"}
+def me(actor: User = Depends(get_actor), db: Session = Depends(get_db)) -> dict[str, Any]:
+    student = db.scalar(select(Student).where(Student.user_id == actor.id))
+    user = dump(actor)
+    user.pop("pin_hash", None)
+    return {"user": user | {"student_id": student.id if student else None}, "auth_mode": "DEMO" if settings.demo_mode else "LIVE"}
 
 
 @router.post("/demand-tickets")

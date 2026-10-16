@@ -92,8 +92,21 @@ Phones need HTTPS for microphone access; try
 
 ## Verification status
 
-Tested: backend `pytest -q` (127 passed), frontend `npm test` (6 passed),
-frontend `npm run build`, and `docker compose config`.
+Tested: backend `pytest -q` (128 passed), frontend `npm test` (6 passed),
+frontend `npm run build`, `docker compose config`, Docker image build/start,
+live health checks, and live HTTP registration/login.
 
-**Untested:** full Docker image startup and end-to-end browser registration flow
-until the Docker image pull/build completes in the local environment.
+**Untested:** full browser automation, testing on a real low-end Android device,
+and real employer confirmation.
+
+## Blueprint scope
+
+The current branch implements the blueprint's backend and browser workflows:
+source-backed reference records, employer demand capture and human confirmation,
+deterministic pods, safeguarding, facilitator review, module authoring, student
+submissions, outcome reporting, offline sync, and voice input/output fallbacks.
+
+The following blueprint items remain intentionally excluded at the request for this
+implementation: a separate demo-mode redesign, testing on a real low-end Android
+device, and obtaining real employer confirmations. Simulated data remains explicitly
+labelled and no job, income, or placement guarantee is made.

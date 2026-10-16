@@ -1,42 +1,17 @@
 [
   {
-    "id": "placeholder_mobile_repair_occupation",
-    "record_type": "occupation",
-    "title": "PLACEHOLDER: Mobile repair occupation",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with a description checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
-    "skill_family_ids": [
-      "mobile_repair"
-    ],
-    "language_codes": [
-      "en",
-      "hi",
-      "ta",
-      "te"
-    ],
-    "eligibility_json": {},
-    "benefits_json": {},
-    "verification_status": "unverified",
-    "valid_until": null
-  },
-  {
-    "id": "placeholder_mobile_repair_course",
+    "id": "skill_india",
     "record_type": "course",
-    "title": "PLACEHOLDER: Mobile repair course",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with course details checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
-    "skill_family_ids": [
-      "mobile_repair"
-    ],
+    "title": "Skill India Digital Hub courses",
+    "authority": "Skill India Digital Hub",
+    "description": "Skills courses and training discovery.",
+    "source_url": "https://www.skillindiadigital.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
     "language_codes": [
       "en",
       "hi",
-      "ta",
-      "te"
+      "ta"
     ],
     "eligibility_json": {},
     "benefits_json": {},
@@ -44,21 +19,136 @@
     "valid_until": null
   },
   {
-    "id": "placeholder_tailoring_apprenticeship",
+    "id": "ncs",
+    "record_type": "opportunity",
+    "title": "National Career Service",
+    "authority": "Directorate General of Employment",
+    "description": "Career guidance, vacancies and services.",
+    "source_url": "https://www.ncs.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "apprenticeship",
     "record_type": "apprenticeship",
-    "title": "PLACEHOLDER: Tailoring apprenticeship",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with apprenticeship details checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
+    "title": "Apprenticeship India",
+    "authority": "Ministry of Skill Development and Entrepreneurship",
+    "description": "Apprenticeship discovery and registration.",
+    "source_url": "https://www.apprenticeshipindia.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "scholarships",
+    "record_type": "scholarship",
+    "title": "National Scholarship Portal",
+    "authority": "Government of India",
+    "description": "Scholarship application and status information.",
+    "source_url": "https://scholarships.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "diksha",
+    "record_type": "course",
+    "title": "DIKSHA learning resources",
+    "authority": "Ministry of Education",
+    "description": "Digital learning resources for learners and teachers.",
+    "source_url": "https://diksha.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "swayam",
+    "record_type": "course",
+    "title": "SWAYAM online courses",
+    "authority": "Government of India",
+    "description": "Online courses and learning pathways.",
+    "source_url": "https://swayam.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "skill_india_mobile",
+    "record_type": "occupation",
+    "title": "Mobile repair skill pathway",
+    "authority": "Skill India Digital Hub",
+    "description": "Use the official skills portal to check current mobile repair training options.",
+    "source_url": "https://www.skillindiadigital.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [
+      "mobile_repair"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "ncs_tailoring",
+    "record_type": "occupation",
+    "title": "Tailoring and garment work pathway",
+    "authority": "National Career Service",
+    "description": "Use the official career service to check current local opportunities.",
+    "source_url": "https://www.ncs.gov.in/",
+    "last_checked_at": "2026-10-16",
     "skill_family_ids": [
       "tailoring"
     ],
     "language_codes": [
       "en",
       "hi",
-      "ta",
-      "te"
+      "ta"
     ],
     "eligibility_json": {},
     "benefits_json": {},
@@ -66,21 +156,20 @@
     "valid_until": null
   },
   {
-    "id": "placeholder_solar_maintenance_scheme",
-    "record_type": "scheme",
-    "title": "PLACEHOLDER: Solar maintenance scheme",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with scheme details checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
+    "id": "apprenticeship_solar",
+    "record_type": "apprenticeship",
+    "title": "Solar maintenance apprenticeship search",
+    "authority": "Apprenticeship India",
+    "description": "Search current apprenticeship opportunities and eligibility.",
+    "source_url": "https://www.apprenticeshipindia.gov.in/",
+    "last_checked_at": "2026-10-16",
     "skill_family_ids": [
       "solar_maintenance"
     ],
     "language_codes": [
       "en",
       "hi",
-      "ta",
-      "te"
+      "ta"
     ],
     "eligibility_json": {},
     "benefits_json": {},
@@ -88,43 +177,41 @@
     "valid_until": null
   },
   {
-    "id": "placeholder_food_service_occupation",
-    "record_type": "occupation",
-    "title": "PLACEHOLDER: Food service occupation",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with occupation details checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
-    "skill_family_ids": [
-      "food_service"
-    ],
-    "language_codes": [
-      "en",
-      "hi",
-      "ta",
-      "te"
-    ],
-    "eligibility_json": {},
-    "benefits_json": {},
-    "verification_status": "unverified",
-    "valid_until": null
-  },
-  {
-    "id": "placeholder_digital_services_examination",
-    "record_type": "examination",
-    "title": "PLACEHOLDER: Digital services examination",
-    "authority": "PLACEHOLDER: official authority to be supplied",
-    "description": "PLACEHOLDER: Replace with examination details checked against a real official source.",
-    "source_url": "https://REPLACE-WITH-REAL-SOURCE",
-    "last_checked_at": "2026-10-15",
+    "id": "diksha_digital",
+    "record_type": "course",
+    "title": "Digital literacy learning resources",
+    "authority": "DIKSHA",
+    "description": "Review current digital learning resources before choosing a pathway.",
+    "source_url": "https://diksha.gov.in/",
+    "last_checked_at": "2026-10-16",
     "skill_family_ids": [
       "digital_services"
     ],
     "language_codes": [
       "en",
       "hi",
-      "ta",
-      "te"
+      "ta"
+    ],
+    "eligibility_json": {},
+    "benefits_json": {},
+    "verification_status": "unverified",
+    "valid_until": null
+  },
+  {
+    "id": "ncs_food_service",
+    "record_type": "occupation",
+    "title": "Food service pathway",
+    "authority": "National Career Service",
+    "description": "Use the official career service to check current food service opportunities.",
+    "source_url": "https://www.ncs.gov.in/",
+    "last_checked_at": "2026-10-16",
+    "skill_family_ids": [
+      "food_service"
+    ],
+    "language_codes": [
+      "en",
+      "hi",
+      "ta"
     ],
     "eligibility_json": {},
     "benefits_json": {},
