@@ -52,6 +52,7 @@ class LLMClient(Protocol):
 class OllamaClient:
     def __init__(self, model: str | None = None) -> None:
         self.model = model or os.getenv("OLLAMA_MODEL", "qwen2.5:7b-instruct")
+        self.base_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
 
     def complete_json(self, system: str, user: str, timeout_s: int = 20) -> dict:
         payload = json.dumps(
@@ -67,7 +68,7 @@ class OllamaClient:
             }
         ).encode("utf-8")
         request = Request(
-            "http://localhost:11434/api/chat",
+            f"{self.base_url}/api/chat",
             data=payload,
             headers={"Content-Type": "application/json"},
             method="POST",

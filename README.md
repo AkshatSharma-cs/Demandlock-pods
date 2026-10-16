@@ -54,6 +54,9 @@ Demo mode enables simulated rows, the demo user switcher, and
 | `CORS_ORIGINS` | `http://localhost:8080` | Comma-separated browser origins |
 | `AUDIO_DIR` | `/app/media/audio` | Persistent audio upload directory |
 | `POD_THRESHOLD` | `5` | Confirmed employment slots needed for a pod |
+| `OLLAMA_BASE_URL` | `http://host.docker.internal:11434` | Ollama API address |
+| `OLLAMA_MODEL` | `qwen2.5:7b-instruct` | Local Ollama model |
+| `WHISPER_MODEL` | `small` | Local faster-whisper model |
 
 Compose supplies `DATABASE_URL` as
 `postgresql+psycopg2://demandlock:${POSTGRES_PASSWORD}@db:5432/demandlock`.

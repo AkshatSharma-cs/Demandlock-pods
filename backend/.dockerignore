@@ -7,3 +7,4 @@ media
 demandlock.db
 .pytest_cache/
 tests/
+scripts/audio/

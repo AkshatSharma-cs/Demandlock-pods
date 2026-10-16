@@ -25,6 +25,11 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
       POD_THRESHOLD: ${POD_THRESHOLD:-5}
       AUDIO_DIR: ${AUDIO_DIR:-./media/audio}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b-instruct}
+      WHISPER_MODEL: ${WHISPER_MODEL:-small}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - audio:/app/media/audio
     ports:
