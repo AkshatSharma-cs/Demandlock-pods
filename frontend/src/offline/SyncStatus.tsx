@@ -1,0 +1,2 @@
+interface Props { pendingCount: number; needsReviewCount: number; syncing: boolean; onSync: () => void; }
+export function SyncStatus({ pendingCount, needsReviewCount, syncing, onSync }: Props) { const label = needsReviewCount ? `${needsReviewCount} need review` : pendingCount ? `Saved offline: ${pendingCount} waiting` : "All synced"; return <div className="sync-status" role="status"><strong>{label}</strong><button onClick={onSync} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button></div>; }

@@ -1,1 +1,29 @@
-# Services to be added: db (postgres), api (backend), web (frontend)
+services:
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-sqlite:///./demandlock.db}
+      ENABLE_LLM_EXTRACTION: ${ENABLE_LLM_EXTRACTION:-false}
+      ENABLE_LLM_MODULE_DRAFTS: ${ENABLE_LLM_MODULE_DRAFTS:-false}
+      ENABLE_ASR: ${ENABLE_ASR:-false}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      POD_THRESHOLD: ${POD_THRESHOLD:-5}
+      AUDIO_DIR: ${AUDIO_DIR:-./media/audio}
+    volumes:
+      - ./backend:/app
+      - ./backend/media:/app/media
+    ports:
+      - "8000:8000"
+  web:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+  db:
+    image: postgres:16-alpine
+    profiles: ["pg"]
+    environment:
+      POSTGRES_DB: demandlock
+      POSTGRES_USER: demandlock
+      POSTGRES_PASSWORD: demandlock
