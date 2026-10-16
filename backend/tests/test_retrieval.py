@@ -259,9 +259,9 @@ def test_build_claims_flags_dates_older_than_90_days():
     ).isoformat()
 
     records = [
-        record("fresh", last_checked_at=TODAY),
-        record("boundary", last_checked_at=exactly_90_days_old),
-        record("stale", last_checked_at=older_than_90_days),
+        record("fresh", title="fresh", last_checked_at=TODAY),
+        record("boundary", title="boundary", last_checked_at=exactly_90_days_old),
+        record("stale", title="stale", last_checked_at=older_than_90_days),
     ]
 
     claims = build_claims(records, today=TODAY)
