@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from ..db import get_db
-from ..deps import get_actor, require_role
+from ..deps import get_actor, require_role, require_verified_facilitator
 from ..models import Student, TaskSubmission, User
 from ..models import Module
 from ..services import core, safeguarding
@@ -72,7 +72,7 @@ def create_submission(
 def review_by_teacher(
     submission_id: str,
     payload: TeacherReview,
-    actor: User = Depends(require_role("facilitator")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> dict:
     row = db.get(TaskSubmission, submission_id)

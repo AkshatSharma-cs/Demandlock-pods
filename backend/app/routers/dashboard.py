@@ -30,7 +30,7 @@ def impact(actor: User = Depends(get_actor), db: Session = Depends(get_db)) -> d
         stages.setdefault(outcome.event_type, {})
         stages[outcome.event_type][level] = stages[outcome.event_type].get(level, 0) + 1
     return {
-        "data_mode": "SIMULATED" if settings.demo_mode else "LIVE",
+        "data_mode": "SIMULATED" if db.scalar(select(OutcomeEvent).where(OutcomeEvent.data_mode == "SIMULATED")) or db.scalar(select(Pod).where(Pod.data_mode == "SIMULATED")) or db.scalar(select(DemandTicket).where(DemandTicket.data_mode == "SIMULATED")) else "LIVE",
         "outcomes": stages,
         "counts_by_stage_and_verification_level": stages,
         "tickets_by_status": grouped(db.scalars(select(DemandTicket)).all(), "status"),

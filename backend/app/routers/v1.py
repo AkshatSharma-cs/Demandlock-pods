@@ -12,7 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..config import settings
-from ..deps import get_actor, require_role
+from ..deps import get_actor, require_role, require_verified_facilitator
 from ..models import (
     DemandTicket, KnowledgeRecord, Module, OutcomeEvent, Pod, PodEnrolment,
     SkillFamily, Student, TaskSubmission, User,
@@ -131,7 +131,7 @@ def _ticket(db: Session, ticket_id: str) -> DemandTicket:
 
 @router.get("/me")
 def me(actor: User = Depends(get_actor)) -> dict[str, Any]:
-    return {"user": dump(actor), "auth_mode": "DEMO"}
+    return {"user": dump(actor), "auth_mode": "DEMO" if settings.demo_mode else "LIVE"}
 
 
 @router.post("/demand-tickets")
@@ -208,7 +208,7 @@ def confirm_ticket(ticket_id: str, payload: TicketConfirm, actor: User = Depends
 
 
 @router.post("/pods/evaluate")
-def evaluate_pod(payload: Evaluate, actor: User = Depends(require_role("facilitator", "admin")), db: Session = Depends(get_db)):
+def evaluate_pod(payload: Evaluate, actor: User = Depends(require_verified_facilitator), db: Session = Depends(get_db)):
     if not db.get(SkillFamily, payload.skill_family_id): fail(422, "Unknown skill family")
     today = date.today()
     tickets = db.scalars(select(DemandTicket).where(
@@ -284,7 +284,7 @@ def student_pods(student_id: str, actor: User = Depends(get_actor), db: Session 
 
 
 @router.post("/modules")
-def create_module(payload: ModuleCreate, actor: User = Depends(require_role("facilitator")), db: Session = Depends(get_db)):
+def create_module(payload: ModuleCreate, actor: User = Depends(require_verified_facilitator), db: Session = Depends(get_db)):
     if payload.pricing_model not in {"free", "pay_per_module", "subscription"}: fail(422, "Invalid pricing_model")
     content = payload.content_json or module_draft.generate_module_draft(payload.skill_family_id, payload.language)
     row = Module(id=payload.id or str(uuid.uuid4()), title=payload.title, skill_family_id=payload.skill_family_id,
@@ -302,7 +302,7 @@ def list_modules(skill_family_id: str | None = None, status: str | None = None, 
 
 
 @router.post("/modules/{module_id}/publish")
-def publish_module(module_id: str, payload: Publish, actor: User = Depends(require_role("facilitator")), db: Session = Depends(get_db)):
+def publish_module(module_id: str, payload: Publish, actor: User = Depends(require_verified_facilitator), db: Session = Depends(get_db)):
     if not payload.human_reviewed: fail(422, "human_reviewed must be true")
     row = db.get(Module, module_id)
     if not row: fail(404, "Module not found")
@@ -331,7 +331,7 @@ def create_submission(task_id: str, payload: SubmissionCreate, actor: User = Dep
 
 @router.post("/submissions/{submission_id}/teacher-review")
 def teacher_review(submission_id: str, payload: TeacherReview,
-                   actor: User = Depends(require_role("facilitator")), db: Session = Depends(get_db)):
+                   actor: User = Depends(require_verified_facilitator), db: Session = Depends(get_db)):
     row = db.get(TaskSubmission, submission_id)
     if not row: fail(404, "Submission not found")
     if payload.decision not in {"teacher_reviewed", "returned_for_revision", "accepted"}: fail(422, "Invalid decision")

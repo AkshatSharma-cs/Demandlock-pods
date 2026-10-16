@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..db import get_db
-from ..deps import get_actor, require_role
+from ..deps import get_actor, require_role, require_verified_facilitator
 from ..models import KnowledgeRecord, Module, SkillFamily, User
 from ..services import core
 
@@ -35,7 +35,7 @@ class PublishRequest(BaseModel):
 @router.post("/modules")
 def create_module(
     payload: ModuleCreate,
-    actor: User = Depends(require_role("facilitator")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> dict:
     if payload.pricing_model not in {"free", "pay_per_module", "subscription"}:
@@ -66,7 +66,7 @@ def list_modules(
 def publish_module(
     module_id: str,
     payload: PublishRequest,
-    actor: User = Depends(require_role("facilitator")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> dict:
     if not payload.human_reviewed:

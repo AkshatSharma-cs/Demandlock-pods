@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..db import get_db
-from ..deps import get_actor, require_role
+from ..deps import get_actor, require_role, require_verified_facilitator
 from ..models import DemandTicket, KnowledgeRecord, Module, Pod, PodEnrolment, SkillFamily, Student, TaskSubmission, User
 from ..services import pods_rule, retrieval, safeguarding
 
@@ -61,7 +61,7 @@ def pod_details(db: Session, pod: Pod) -> dict:
 @router.post("/pods/evaluate")
 def evaluate_pod(
     payload: Evaluate,
-    actor: User = Depends(require_role("facilitator", "admin")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> dict:
     family = db.get(SkillFamily, payload.skill_family_id)
@@ -98,7 +98,7 @@ def get_pod(pod_id: str, actor: User = Depends(get_actor), db: Session = Depends
 @router.get("/pods/{pod_id}/submissions")
 def pod_submissions(
     pod_id: str,
-    actor: User = Depends(require_role("facilitator")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> list[dict]:
     pod_or_404(db, pod_id)
@@ -125,7 +125,7 @@ class ModuleLink(BaseModel):
 def attach_module(
     pod_id: str,
     payload: ModuleLink,
-    actor: User = Depends(require_role("facilitator")),
+    actor: User = Depends(require_verified_facilitator),
     db: Session = Depends(get_db),
 ) -> dict:
     pod = pod_or_404(db, pod_id)
