@@ -3,3 +3,8 @@ dist
 *.db
 .venv
 __pycache__
+.git
+.gitignore
+.vite
+coverage
+*.log
